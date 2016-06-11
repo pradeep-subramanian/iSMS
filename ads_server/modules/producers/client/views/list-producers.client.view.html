@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Producers</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="producer in vm.producers"
+       data-ui-sref="producers.view({ producerId: producer._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="producer.created | date:'mediumDate'"></span>
+        by
+        <span data-ng-if="producer.user" data-ng-bind="producer.user.displayName"></span>
+        <span data-ng-if="!producer.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="producer.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.producers.$resolved && !vm.producers.length">
+    No Producers yet, why don't you <a data-ui-sref="producers.create">create one</a>?
+  </div>
+</section>
