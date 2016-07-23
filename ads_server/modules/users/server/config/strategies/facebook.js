@@ -10,14 +10,15 @@ var passport = require('passport'),
 module.exports = function (config) {
   // Use facebook strategy
   passport.use(new FacebookStrategy({
-    clientID: config.facebook.clientID,
-    clientSecret: config.facebook.clientSecret,
-    callbackURL: config.facebook.callbackURL,
+    clientID: '631229007033798',
+    clientSecret: 'd8684f5851d6e962ca7253719c669146',
+    callbackURL: 'http://localhost:4000/',
     profileFields: ['id', 'name', 'displayName', 'emails', 'photos'],
     passReqToCallback: true
   },
   function (req, accessToken, refreshToken, profile, done) {
     // Set the provider data and include tokens
+      console.log('---------'+profile.username);
     var providerData = profile._json;
     providerData.accessToken = accessToken;
     providerData.refreshToken = refreshToken;
@@ -46,7 +47,6 @@ module.exports = function (config) {
       } else if (profile.name) {
         username = profile.name.givenName[0] + profile.name.familyName;
       }
-
       return username.toLowerCase() || undefined;
     }
   }));
