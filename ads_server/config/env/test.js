@@ -66,6 +66,14 @@ module.exports = {
     callbackURL: '/api/auth/paypal/callback',
     sandbox: true
   },
+  chatserver: {
+    serverURL: process.env.CHAT_SERVER_URL || 'http://localhost:3000',
+    auth: {
+      secretURL: 'fzTohJyTHRbm72dWu',
+      adminUser: process.env.CHAT_ADMIN_USER_ID || 'Test',
+      adminPass: process.env.CHAT_ADMIN_USER_PASSWORD || 'Test123456!'
+    }
+  },
   mailer: {
     from: process.env.MAILER_FROM || 'MAILER_FROM',
     options: {

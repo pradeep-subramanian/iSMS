@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Tests</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="test in vm.tests"
+       data-ui-sref="tests.view({ testId: test._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="test.created | date:'mediumDate'"></span>
+        by
+        <span data-ng-if="test.user" data-ng-bind="test.user.displayName"></span>
+        <span data-ng-if="!test.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="test.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.tests.$resolved && !vm.tests.length">
+    No Tests yet, why don't you <a data-ui-sref="tests.create">create one</a>?
+  </div>
+</section>
