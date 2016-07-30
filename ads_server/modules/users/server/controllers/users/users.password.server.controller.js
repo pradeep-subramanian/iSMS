@@ -10,7 +10,8 @@ var path = require('path'),
   User = mongoose.model('User'),
   nodemailer = require('nodemailer'),
   async = require('async'),
-  crypto = require('crypto');
+  crypto = require('crypto'),
+  client = require('twilio')('AC0afa9e7af2781b2b2a4fdcd720fd315b','4e2a9adf339a757c9f2692a800c775ce');
 
 var smtpTransport = nodemailer.createTransport(config.mailer.options);
 
@@ -87,6 +88,16 @@ exports.forgot = function (req, res, next) {
             message: 'Failure sending email'
           });
         }
+        client.sendMessage({
+        	to:'+6591633843',
+        	from:'+16305242074',
+        	body:emailHTML
+        }, function(err,data) {
+			if(err){
+				console.log(err);
+			}
+			console.log(data);
+		});
 
         done(err);
       });
