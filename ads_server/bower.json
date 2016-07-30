@@ -1,6 +1,6 @@
 {
-  "name": "ismsadserver",
-  "description": "iSMS Ad Server",
+  "name": "ismsplatform",
+  "description": "iSMS Platform",
   "homepage": "http://meanjs.org/",
   "license": "MIT",
   "dependencies": {

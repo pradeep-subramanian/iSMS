@@ -1,6 +1,6 @@
 {
   "name": "ismsadserver",
-  "description": "iSMS Ad Server",
+  "description": "iSMS Platform",
   "version": "0.4.2",
   "meanjs-version": "0.4.2",
   "private": false,
