@@ -10,9 +10,9 @@ var passport = require('passport'),
 module.exports = function (config) {
   // Use github strategy
   passport.use(new GithubStrategy({
-    clientID: '95b10f8543a3cfff7108',
-    clientSecret: '43ed33037cdfad0b7de811f52aa402a8bc090ae0',
-    callbackURL: 'http://localhost:4000/',
+    clientID: config.github.clientID,
+    clientSecret: config.github.clientSecret,
+    callbackURL: config.github.callbackURL,
     passReqToCallback: true
   },
   function (req, accessToken, refreshToken, profile, done) {

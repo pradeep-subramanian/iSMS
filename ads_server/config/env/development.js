@@ -35,34 +35,34 @@ module.exports = {
     title: defaultEnvConfig.app.title + ' - Development Environment'
   },
   facebook: {
-    clientID: process.env.FACEBOOK_ID || 'APP_ID',
-    clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
-    callbackURL: '/api/auth/facebook/callback'
+    clientID: process.env.FACEBOOK_ID || '631229007033798',
+    clientSecret: process.env.FACEBOOK_SECRET || 'd8684f5851d6e962ca7253719c669146',
+    callbackURL: 'http://localhost:4000/api/auth/facebook/callback'
   },
   twitter: {
-    clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
-    clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
-    callbackURL: '/api/auth/twitter/callback'
+    clientID: process.env.TWITTER_KEY || 'JqNArj4lHz0ONLhyrTvu43YoC',
+    clientSecret: process.env.TWITTER_SECRET || 'Tqx8RjL1WPosLYtJON88MuHrOLzYmPMv3ReBDBqCR4LcPkjcCl',
+    callbackURL: 'http://localhost:4000/api/auth/twitter/callback'
   },
   google: {
-    clientID: process.env.GOOGLE_ID || 'APP_ID',
-    clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',
-    callbackURL: '/api/auth/google/callback'
+    clientID: process.env.GOOGLE_ID || '432491948867-of2p3nads1iu04jhgjerj4m05217b00c.apps.googleusercontent.com',
+    clientSecret: process.env.GOOGLE_SECRET || 'DkTgIxczxLJCkmzORpjgs0ty',
+    callbackURL: 'http://localhost:4000/api/auth/google/callback'
   },
   linkedin: {
-    clientID: process.env.LINKEDIN_ID || 'APP_ID',
-    clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
-    callbackURL: '/api/auth/linkedin/callback'
+    clientID: process.env.LINKEDIN_ID || '81gjktc1s1557p',
+    clientSecret: process.env.LINKEDIN_SECRET || 'Nn4HCLKm4DjBPc1Y',
+    callbackURL: 'http://localhost:4000/api/auth/linkedin/callback'
   },
   github: {
-    clientID: process.env.GITHUB_ID || 'APP_ID',
-    clientSecret: process.env.GITHUB_SECRET || 'APP_SECRET',
-    callbackURL: '/api/auth/github/callback'
+    clientID: process.env.GITHUB_ID || '95b10f8543a3cfff7108',
+    clientSecret: process.env.GITHUB_SECRET || '43ed33037cdfad0b7de811f52aa402a8bc090ae0',
+    callbackURL: 'http://localhost:4000/api/auth/github/callback'
   },
   paypal: {
     clientID: process.env.PAYPAL_ID || 'CLIENT_ID',
     clientSecret: process.env.PAYPAL_SECRET || 'CLIENT_SECRET',
-    callbackURL: '/api/auth/paypal/callback',
+    callbackURL: 'http://localhost:4000/api/auth/paypal/callback',
     sandbox: true
   },
   chatserver: {
@@ -74,12 +74,12 @@ module.exports = {
     }
   },
   mailer: {
-    from: process.env.MAILER_FROM || 'MAILER_FROM',
+    from: process.env.MAILER_FROM || 'ismspt22@gmail.com',
     options: {
-      service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
+      service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
       auth: {
-        user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
-        pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+        user: process.env.MAILER_EMAIL_ID || 'ismspt22@gmail.com',
+        pass: process.env.MAILER_PASSWORD || 'Singapore123'
       }
     }
   },
