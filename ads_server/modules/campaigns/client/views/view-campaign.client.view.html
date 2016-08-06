@@ -1,0 +1,58 @@
+<section>
+  <div class="page-header">
+    <h1 data-ng-bind="vm.campaign.name"></h1>
+	Keywords: <h1 data-ng-bind="vm.campaign.keywords"></h1>
+	Cost Per Click: <h1 data-ng-bind="vm.campaign.costPerClick"></h1>
+	Total Budget: <h1 data-ng-bind="vm.campaign.totalBudget"></h1>
+	Remaining Budget: <h1 data-ng-bind="vm.campaign.remainingBudget"></h1>
+
+	
+	Campaign Advertisements:
+	<div ng-repeat="ad in vm.campaignAds">
+		<a href="http://localhost:4000/ads/{{ad._id}}"><h1>{{ad.name}} / {{ad.url}}<h1></a>
+	</div><br/>
+	
+	<!-- Working list of campaign ads, but ID only -->
+	<!-- 
+	Campaign Advertisements:
+	<div ng-repeat="ad in vm.campaign.advertisement">
+		<a href="http://localhost:4000/ads/{{ad}}"><h1>{{ad}}<h1></a>
+	</div>
+	-->
+	
+	<!-- Working List of All Ads -->
+	All Advertisements:
+	<div ng-repeat="ad in vm.adsList">
+		 <a href="http://localhost:4000/ads/{{ad._id}}"><h1>{{ad.name}} / {{ad.url}}</h1></a>
+    </div>
+		
+  </div>
+  
+
+ <!--<a class="btn btn-primary" data-ng-click="vm.helloworld()"> <i class="glyphicon glyphicon-trash"></i></a>-->
+
+
+
+ 
+  <div class="pull-right"
+       data-ng-show="vm.campaign.isCurrentUserOwner">
+    <a class="btn btn-primary"
+       data-ui-sref="campaigns.edit({ campaignId: vm.campaign._id })">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" data-ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span data-ng-bind="vm.campaign.created | date:'mediumDate'"></span>
+      by
+      <span data-ng-if="vm.campaign.user"
+            data-ng-bind="vm.campaign.user.displayName"></span>
+      <span data-ng-if="!vm.campaign.user">Deleted User</span>
+    </em>
+  </small>
+  <p class="lead" data-ng-bind="vm.campaign.content"></p>
+</section>

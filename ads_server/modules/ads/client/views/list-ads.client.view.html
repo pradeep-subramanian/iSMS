@@ -1,0 +1,23 @@
+<section>
+  <div class="page-header">
+    <h1>Ads</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="ad in vm.ads"
+       data-ui-sref="ads.view({ adId: ad._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="ad.created | date:'mediumDate'"></span>
+        by
+        <span data-ng-if="ad.user" data-ng-bind="ad.user.displayName"></span>
+        <span data-ng-if="!ad.user">Deleted User</span>
+      </small>
+      <br>name: <h4 class="list-group-item-heading" data-ng-bind="ad.name"></h4>
+	  Description: <h4 class="list-group-item-heading" data-ng-bind="ad.description"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.ads.$resolved && !vm.ads.length">
+    No Ads yet, why don't you <a data-ui-sref="ads.create">create one</a>?
+  </div>
+</section>

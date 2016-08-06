@@ -1,0 +1,56 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.ad._id ? 'Edit Ad' : 'New Ad'}}</h1>
+  </div>
+  <div class="col-md-12">
+
+    <form name="vm.form.adForm" class="form-horizontal" ng-submit="vm.save(vm.form.adForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">Name</label>
+          <input name="name" type="text" ng-model="vm.ad.name" id="name" class="form-control" placeholder="Name" required>
+          <div ng-messages="vm.form.adForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Ad name is required.</p>
+          </div>
+
+		  <label class="control-label" for="name">Description</label>
+          <input name="description" type="text" ng-model="vm.ad.description" id="description" class="form-control" placeholder="Description" required>
+          <div ng-messages="vm.form.adForm.description.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Description is required.</p>
+          </div>
+		  
+		  <label class="control-label" for="name">URL</label>
+          <input name="url" type="text" ng-model="vm.ad.url" id="url" class="form-control" placeholder="URL" required>
+          <div ng-messages="vm.form.adForm.url.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">URL is required.</p>
+          </div>
+		  
+		  <label class="control-label" for="name">Number of Views</label>
+          <input name="numViews" type="text" ng-model="vm.ad.numViews" id="numViews" class="form-control" placeholder="Number of Views" required>
+          <div ng-messages="vm.form.adForm.numViews.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Number of Views is required.</p>
+          </div>
+		  
+		  <label class="control-label" for="name">Number of Clicks</label>
+          <input name="numClicks" type="text" ng-model="vm.ad.numClicks" id="numClicks" class="form-control" placeholder="Number of Clicks" required>
+          <div ng-messages="vm.form.adForm.numClicks.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Number of Clicks is required.</p>
+          </div>
+		  
+		  <label class="control-label" for="name">Click Through Rate</label>
+          <input name="clickThroughRate" type="text" ng-model="vm.ad.clickThroughRate" id="clickThroughRate" class="form-control" placeholder="Click Through Rate" required>
+          <div ng-messages="vm.form.adForm.clickThroughRate.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Click Through Rate is required.</p>
+          </div>
+		  
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.ad._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

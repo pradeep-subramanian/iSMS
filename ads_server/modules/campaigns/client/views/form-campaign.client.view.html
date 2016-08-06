@@ -1,0 +1,65 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.campaign._id ? 'Edit Campaign' : 'New Campaign'}}</h1>
+  </div>
+  <div class="col-md-12">
+  
+    <form name="vm.form.campaignForm" class="form-horizontal" ng-submit="vm.save(vm.form.campaignForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="name">Name</label>
+          <input name="name" type="text" ng-model="vm.campaign.name" id="name" class="form-control" placeholder="Name" required>
+          <div ng-messages="vm.form.campaignForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Campaign name is required.</p>
+          </div>
+		  
+		  <label class="control-label" for="keywords">Keywords</label>
+          <input name="keywords" type="text" ng-model="vm.campaign.keywords" id="keywords" class="form-control" placeholder="Keywords" required>
+          <div ng-messages="vm.form.campaignForm.keywords.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Keywords is required.</p>
+          </div>
+		  
+		  <label class="control-label" for="costPerClick">Cost Per Click</label>
+          <input name="costPerClick" type="text" ng-model="vm.campaign.costPerClick" id="costPerClick" class="form-control" placeholder="Cost Per Click" required>
+          <div ng-messages="vm.form.campaignForm.costPerClick.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Cost Per Click is required.</p>
+          </div>
+		  
+		  <label class="control-label" for="totalBudget">Total Budget</label>
+          <input name="totalBudget" type="text" ng-model="vm.campaign.totalBudget" id="totalBudget" class="form-control" placeholder="Total Budget" required>
+          <div ng-messages="vm.form.campaignForm.totalBudget.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Total Budget is required.</p>
+          </div>
+		  
+		  <label class="control-label" for="remainingBudget">Remaining Budget</label>
+          <input name="remainingBudget" type="text" ng-model="vm.campaign.remainingBudget" id="remainingBudget" class="form-control" placeholder="Remaining Budget" required>
+          <div ng-messages="vm.form.campaignForm.remainingBudget.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Remaining Budget is required.</p>
+          </div>
+		  
+		  <div>
+		  Your current ads:
+		  <div ng-repeat="ad in vm.campaign.advertisement">
+				<a href="http://localhost:4000/ads/{{ad._id}}"><h1>{{ad.name}}</h1></a>{{ad}}
+		  </div>
+		  </div>
+		  <!-- Working List of All Ads -->
+			<label for="adsList" class="form-control-static" style="vertical-align:middle; margin-right:2px;">These are the list of advertisements available: :</label>
+          <select name="adsList" id="adsList" class="form-control" style="margin-right:2px;"
+                  ng-options="ad as ad.name for ad in vm.adsList"
+                  ng-model="selectedAds">
+            <option value=""></option>
+          </select>
+		  </div>
+		  
+        </div>
+        <div class="form-group">		
+          <button type="submit" class="btn btn-default">{{vm.campaign._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

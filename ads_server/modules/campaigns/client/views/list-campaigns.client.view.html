@@ -1,0 +1,30 @@
+<section>
+  <div class="page-header">
+    <h1>Campaigns</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="campaign in vm.campaigns"
+       data-ui-sref="campaigns.view({ campaignId: campaign._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="campaign.created | date:'mediumDate'"></span>
+        by
+        <span data-ng-if="campaign.user" data-ng-bind="campaign.user.displayName"></span>
+        <span data-ng-if="!campaign.user">Deleted User</span>
+      </small>
+      <br>Name: <h4 class="list-group-item-heading" data-ng-bind="campaign.name"></h4>
+	  <br>Advertisement: <h4 class="list-group-item-heading"">
+		<div data-ng-repeat="ad in campaign.advertisement">
+			{{ad.name}}<br/>
+		</div>
+	  </h4>
+	  
+	  
+	  Remaining Budget: <h4 class="list-group-item-heading" data-ng-bind="campaign.remainingBudget"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.campaigns.$resolved && !vm.campaigns.length">
+    No Campaigns yet, why don't you <a data-ui-sref="campaigns.create">create one</a>?
+  </div>
+</section>
