@@ -70,8 +70,8 @@ module.exports = {
     serverURL: process.env.CHAT_SERVER_URL || 'http://localhost:3000',
     auth: {
       secretURL: 'fzTohJyTHRbm72dWu',
-      adminUser: process.env.CHAT_ADMIN_USER_ID || 'Test',
-      adminPass: process.env.CHAT_ADMIN_USER_PASSWORD || 'Test123456!'
+      adminUser: process.env.CHAT_ADMIN_USER_ID || 'test',
+      adminPass: process.env.CHAT_ADMIN_USER_PASSWORD || 'test'
     }
   },
   mailer: {

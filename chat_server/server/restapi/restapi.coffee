@@ -1,7 +1,7 @@
 Api = new Restivus
 	useDefaultAuth: true
 	prettyJson: true
-	enableCors: false
+	enableCors: true
 
 
 Api.addRoute 'info', authRequired: false,

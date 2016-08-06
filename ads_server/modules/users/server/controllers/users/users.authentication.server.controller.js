@@ -7,6 +7,7 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
+  chatserver = require(path.resolve('./config/lib/chatserver.js')),
   User = mongoose.model('User');
 
 // URLs for which user can't be redirected on signin
@@ -26,6 +27,8 @@ exports.signup = function (req, res) {
   var user = new User(req.body);
   var message = null;
 
+  var plainPassword = user.password;
+
   // Add missing user fields
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName;
@@ -37,6 +40,8 @@ exports.signup = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      chatserver.registerUser(user.username, user.email, plainPassword, null, null);
+
       // Remove sensitive data before login
       user.password = undefined;
       user.salt = undefined;
