@@ -11,9 +11,15 @@ var path = require('path'),
   nodemailer = require('nodemailer'),
   async = require('async'),
   crypto = require('crypto'),
+  i18n = require("i18n"),
   client = require('twilio')('AC0afa9e7af2781b2b2a4fdcd720fd315b','4e2a9adf339a757c9f2692a800c775ce');
 
 var smtpTransport = nodemailer.createTransport(config.mailer.options);
+i18n.configure({
+    locales:['en', 'cn'],
+    defaultLocale: 'en',
+    directory: 'config' + '/locales'
+});
 
 /**
  * Forgot for reset password (forgot POST)
@@ -64,6 +70,10 @@ exports.forgot = function (req, res, next) {
       }
       res.render(path.resolve('modules/users/server/templates/reset-password-email'), {
         name: user.displayName,
+        dear: i18n.__('Dear'),
+        content: i18n.__('Hello'),
+        VisitUrl: i18n.__('VisitUrl'),
+        Ignore: i18n.__('Ignore'),
         appName: config.app.title,
         url: httpTransport + req.headers.host + '/api/auth/reset/' + token
       }, function (err, emailHTML) {
