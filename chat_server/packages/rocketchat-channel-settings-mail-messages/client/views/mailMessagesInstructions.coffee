@@ -23,7 +23,7 @@ Template.mailMessagesInstructions.helpers
 					filter:
 						exceptions: Template.instance().selectedUsers.get()
 					selector: (match) ->
-						return { term: match }
+						return { username: match }
 					sort: 'username'
 				}
 			]

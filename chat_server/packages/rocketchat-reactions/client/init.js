@@ -59,8 +59,6 @@ Meteor.startup(function() {
 
 			if (Array.isArray(room.muted) && room.muted.indexOf(user.username) !== -1) {
 				return false;
-			} else if (Array.isArray(room.usernames) && room.usernames.indexOf(user.username) === -1) {
-				return false;
 			}
 
 			return true;

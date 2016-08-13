@@ -46,26 +46,6 @@ Template.permissionsRole.helpers
 			]
 		}
 
-	autocompleteUsernameSettings: ->
-		return {
-			limit: 10
-			rules: [
-				{
-					collection: 'CachedUserList'
-					subscription: 'userAutocomplete'
-					field: 'username'
-					template: Template.userSearch
-					noMatchTemplate: Template.userSearchEmpty
-					matchAll: true
-					filter:
-						exceptions: Template.instance().usersInRole.get()?.fetch()
-					selector: (match) ->
-						return { term: match }
-					sort: 'username'
-				}
-			]
-		}
-
 Template.permissionsRole.events
 
 	'click .remove-user': (e, instance) ->
@@ -156,12 +136,11 @@ Template.permissionsRole.events
 
 			FlowRouter.go 'admin-permissions'
 
-	'autocompleteselect input[name=room]': (event, template, doc) ->
+	'autocompleteselect input': (event, template, doc) ->
 		template.searchRoom.set(doc._id)
 
 Template.permissionsRole.onCreated ->
 	@searchRoom = new ReactiveVar
-	@searchUsername = new ReactiveVar
 	@usersInRole = new ReactiveVar
 
 	@subscribe 'roles', FlowRouter.getParam('name')

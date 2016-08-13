@@ -1,3 +1,5 @@
+Meteor.subscribe('scopedRoles', 'Users');
+
 if (_.isUndefined(RocketChat.models.Users)) {
 	RocketChat.models.Users = {};
 }

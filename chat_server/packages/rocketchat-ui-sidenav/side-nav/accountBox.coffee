@@ -27,7 +27,6 @@ Template.accountBox.events
 	'click .options .status': (event) ->
 		event.preventDefault()
 		AccountBox.setStatus(event.currentTarget.dataset.status)
-		RocketChat.callbacks.run('userStatusManuallySet', event.currentTarget.dataset.status)
 
 	'click .account-box': (event) ->
 		AccountBox.toggle()

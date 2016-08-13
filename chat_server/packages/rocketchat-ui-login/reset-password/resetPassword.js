@@ -42,7 +42,6 @@ Template.resetPassword.events({
 				} else {
 					FlowRouter.go('home');
 					toastr.success(t('Password_changed_successfully'));
-					RocketChat.callbacks.run('userPasswordReset');
 				}
 			});
 		}

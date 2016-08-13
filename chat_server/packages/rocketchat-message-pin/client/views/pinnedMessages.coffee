@@ -25,7 +25,7 @@ Template.pinnedMessages.events
 		e.stopPropagation()
 		e.preventDefault()
 		message_id = $(e.currentTarget).closest('.message').attr('id')
-		RocketChat.MessageAction.hideDropDown()
+		$('.message-dropdown:visible').hide()
 		t.$("\##{message_id} .message-dropdown").remove()
 		message = PinnedMessage.findOne message_id
 		actions = RocketChat.MessageAction.getButtons message, 'pinned'

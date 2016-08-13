@@ -29,7 +29,7 @@ hasPermission = (permissions, scope, strategy) ->
 	unless userId
 		return false
 
-	unless RocketChat.authz.cachedCollection.ready.get()
+	unless RocketChat.authz.subscription.ready()
 		return false
 
 	permissions = [].concat permissions

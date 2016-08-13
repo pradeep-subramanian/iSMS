@@ -30,8 +30,7 @@ Meteor.startup ->
 				if subscription.alert is true
 					unreadAlert = '•'
 
-			if RoomManager.openedRooms[subscription.t + subscription.name]
-				readMessage.refreshUnreadMark(subscription.rid)
+			readMessage.refreshUnreadMark(subscription.rid)
 
 		menu.updateUnreadBars()
 

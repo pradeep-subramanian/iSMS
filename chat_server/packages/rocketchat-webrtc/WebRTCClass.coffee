@@ -803,11 +803,9 @@ WebRTC = new class
 
 
 Meteor.startup ->
-	Tracker.autorun ->
-		if Meteor.userId()
-			RocketChat.Notifications.onUser 'webrtc', (type, data) =>
-				if not data.room? then return
+	RocketChat.Notifications.onUser 'webrtc', (type, data) =>
+		if not data.room? then return
 
-				webrtc = WebRTC.getInstanceByRoomId(data.room)
+		webrtc = WebRTC.getInstanceByRoomId(data.room)
 
-				webrtc.transport.onUserStream type, data
+		webrtc.transport.onUserStream type, data

@@ -23,7 +23,7 @@ RocketChat.validateEmailDomain = function(email) {
 	if (!emailValidation.test(email)) {
 		throw new Meteor.Error('error-invalid-email', 'Invalid email ' + email, { function: 'RocketChat.validateEmailDomain', email: email });
 	}
-
+	
 	const emailDomain = email.substr(email.lastIndexOf('@') + 1);
 
 	// if not in whitelist
@@ -40,4 +40,6 @@ RocketChat.validateEmailDomain = function(email) {
 			throw new Meteor.Error('error-invalid-domain', 'Invalid domain', { function: 'RocketChat.validateEmailDomain' });
 		}
 	}
+	
+	console.log('validated: ' + email);
 };

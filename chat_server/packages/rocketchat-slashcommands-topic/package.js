@@ -10,11 +10,10 @@ Package.onUse(function(api) {
 	api.versionsFrom('1.0');
 
 	api.use([
-		'rocketchat:lib',
-		'ecmascript'
+		'rocketchat:lib'
 	]);
 
-	api.use(['rocketchat:authorization'], ['client', 'server']);
+	api.use('ecmascript');
 
 	api.addFiles('topic.js', ['client', 'server']);
 });

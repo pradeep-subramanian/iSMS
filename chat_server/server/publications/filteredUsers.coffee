@@ -5,7 +5,7 @@ Meteor.publish 'filteredUsers', (filter) ->
 	if not _.isObject filter
 		return this.ready()
 
-	exp = new RegExp(s.escapeRegExp(filter.name), 'i')
+	exp = new RegExp(filter.name, 'i')
 
 	options =
 		fields:

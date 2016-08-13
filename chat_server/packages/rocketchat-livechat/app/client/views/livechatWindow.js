@@ -1,42 +1,28 @@
-/* globals Department, Livechat */
+/* globals Department */
 Template.livechatWindow.helpers({
 	title() {
-		return Livechat.title;
+		return Template.instance().title.get();
 	},
 	color() {
-		return Livechat.color;
-	},
-	fontColor() {
-		return Livechat.fontColor;
+		return Template.instance().color.get();
 	},
 	popoutActive() {
 		return FlowRouter.getQueryParam('mode') === 'popout';
-	},
-	soundActive() {
-		return Session.get('sound');
 	},
 	showRegisterForm() {
 		if (Session.get('triggered') || Meteor.userId()) {
 			return false;
 		}
-		return Livechat.registrationForm;
+		return Template.instance().registrationForm.get();
 	},
 	livechatStarted() {
-		return Livechat.online !== null;
+		return Template.instance().online.get() !== null;
 	},
 	livechatOnline() {
-		return Livechat.online;
+		return Template.instance().online.get();
 	},
 	offlineMessage() {
-		return Livechat.offlineMessage;
-	},
-	offlineData() {
-		return {
-			offlineMessage: Livechat.offlineMessage.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2'),
-			offlineSuccessMessage: Livechat.offlineSuccessMessage,
-			offlineUnavailableMessage: Livechat.offlineUnavailableMessage.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2'),
-			displayOfflineForm: Livechat.displayOfflineForm
-		};
+		return Template.instance().offlineMessage.get();
 	}
 });
 
@@ -47,26 +33,16 @@ Template.livechatWindow.events({
 	'click .popout'(event) {
 		event.stopPropagation();
 		parentCall('openPopout');
-	},
-	'click .sound'(event) {
-		event.stopPropagation();
-		Session.set({sound: !Session.get('sound')});
 	}
 });
 
 Template.livechatWindow.onCreated(function() {
-	Session.set({sound: true});
+	this.online = new ReactiveVar(null);
 
-	const defaultAppLanguage = () => {
-		let lng = window.navigator.userLanguage || window.navigator.language || 'en';
-		let regexp = /([a-z]{2}-)([a-z]{2})/;
-		if (regexp.test(lng)) {
-			lng = lng.replace(regexp, function(match, ...parts) {
-				return parts[0] + parts[1].toUpperCase();
-			});
-		}
-		return lng;
-	};
+	this.title = new ReactiveVar('Rocket.Chat');
+	this.color = new ReactiveVar('#C1272D');
+	this.registrationForm = new ReactiveVar(true);
+	this.offlineMessage = new ReactiveVar('');
 
 	// get all needed live chat info for the user
 	Meteor.call('livechat:getInitialData', visitor.getToken(), (err, result) => {
@@ -74,33 +50,26 @@ Template.livechatWindow.onCreated(function() {
 			console.error(err);
 		} else {
 			if (!result.enabled) {
-				Triggers.setDisabled();
 				return parentCall('removeWidget');
 			}
 
 			if (!result.online) {
-				Triggers.setDisabled();
-				Livechat.title = result.offlineTitle;
-				Livechat.offlineColor = result.offlineColor;
-				Livechat.offlineMessage = result.offlineMessage;
-				Livechat.displayOfflineForm = result.displayOfflineForm;
-				Livechat.offlineUnavailableMessage = result.offlineUnavailableMessage;
-				Livechat.offlineSuccessMessage = result.offlineSuccessMessage;
-				Livechat.online = false;
+				this.title.set(result.offlineTitle);
+				this.color.set(result.offlineColor);
+				this.offlineMessage.set(result.offlineMessage);
+				this.online.set(false);
 			} else {
-				Livechat.title = result.title;
-				Livechat.onlineColor = result.color;
-				Livechat.online = true;
+				this.title.set(result.title);
+				this.color.set(result.color);
+				this.online.set(true);
 			}
-			Livechat.registrationForm = result.registrationForm;
+			this.registrationForm.set(result.registrationForm);
 
 			if (result.room) {
 				RoomHistoryManager.getMoreIfIsEmpty(result.room._id);
 				visitor.subscribeToRoom(result.room._id);
 				visitor.setRoom(result.room._id);
 			}
-
-			TAPi18n.setLanguage((result.language || defaultAppLanguage()).split('-').shift());
 
 			Triggers.setTriggers(result.triggers);
 			Triggers.init();

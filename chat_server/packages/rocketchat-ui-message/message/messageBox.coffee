@@ -1,13 +1,6 @@
 isSubscribed = (_id) ->
 	return ChatSubscription.find({ rid: _id }).count() > 0
 
-katexSyntax = ->
-	if RocketChat.katex.katex_enabled()
-		return "$$KaTeX$$"   if RocketChat.katex.dollar_syntax_enabled()
-		return "\\[KaTeX\\]" if RocketChat.katex.parenthesis_syntax_enabled()
-
-	return false
-
 Template.messageBox.helpers
 	roomName: ->
 		roomData = Session.get('roomData' + this._id)
@@ -19,14 +12,12 @@ Template.messageBox.helpers
 			return roomData.name
 	showMarkdown: ->
 		return RocketChat.Markdown
-	showMarkdownCode: ->
-		return RocketChat.MarkdownCode
+	showHighlight: ->
+		return RocketChat.Highlight
 	showKatex: ->
 		return RocketChat.katex
-	katexSyntax: ->
-		return katexSyntax()
 	showFormattingTips: ->
-		return RocketChat.settings.get('Message_ShowFormattingTips') and (RocketChat.Markdown or RocketChat.MarkdownCode or katexSyntax())
+		return RocketChat.settings.get('Message_ShowFormattingTips') and (RocketChat.Markdown or RocketChat.Highlight or RocketChat.katex)
 	canJoin: ->
 		return !! ChatRoom.findOne { _id: @_id, t: 'c' }
 	subscribed: ->
@@ -68,15 +59,6 @@ Template.messageBox.helpers
 
 		if Template.instance().showMicButton.get()
 			return 'show-mic'
-
-	showVRec: ->
-		if not Template.instance().isMessageFieldEmpty.get()
-			return 'hide-vrec'
-
-		if Template.instance().showVideoRec.get()
-			return ''
-		else
-			return 'hide-vrec'
 
 	showSend: ->
 		if not Template.instance().isMessageFieldEmpty.get() or not Template.instance().showMicButton.get()
@@ -149,12 +131,6 @@ Template.messageBox.events
 			t.$('.stop-mic').removeClass('hidden')
 			t.$('.mic').addClass('hidden')
 
-	'click .message-form .video-button': (e, t) ->
-		if VRecDialog.opened
-			VRecDialog.close()
-		else
-			VRecDialog.open(e.currentTarget)
-
 	'click .message-form .stop-mic': (e, t) ->
 		AudioRecorder.stop (blob) ->
 			fileUpload [{
@@ -169,16 +145,8 @@ Template.messageBox.events
 Template.messageBox.onCreated ->
 	@isMessageFieldEmpty = new ReactiveVar true
 	@showMicButton = new ReactiveVar false
-	@showVideoRec = new ReactiveVar false
 
 	@autorun =>
-		videoRegex = /video\/webm/i
-		videoEnabled = !RocketChat.settings.get("FileUpload_MediaTypeWhiteList") || RocketChat.settings.get("FileUpload_MediaTypeWhiteList").match(videoRegex)
-		if RocketChat.settings.get('Message_VideoRecorderEnabled') and (navigator.getUserMedia? or navigator.webkitGetUserMedia?) and videoEnabled and RocketChat.settings.get('FileUpload_Enabled')
-			@showVideoRec.set true
-		else
-			@showVideoRec.set false
-
 		wavRegex = /audio\/wav|audio\/\*/i
 		wavEnabled = !RocketChat.settings.get("FileUpload_MediaTypeWhiteList") || RocketChat.settings.get("FileUpload_MediaTypeWhiteList").match(wavRegex)
 		if RocketChat.settings.get('Message_AudioRecorderEnabled') and (navigator.getUserMedia? or navigator.webkitGetUserMedia?) and wavEnabled and RocketChat.settings.get('FileUpload_Enabled')

@@ -18,11 +18,3 @@ Meteor.startup ->
 				user_by: message.u?.username
 				room_topic: message.msg
 			}
-
-	RocketChat.MessageTypes.registerType
-		id: 'room_changed_description'
-		system: true
-		message: 'room_changed_description'
-		data: (message) ->
-			user_by: message.u?.username
-			room_description: message.msg

@@ -10,8 +10,6 @@ Meteor.startup ->
 				topic: 1
 				muted: 1
 				archived: 1
-				jitsiTimeout: 1
-				description: 1
 
 		if RocketChat.authz.hasPermission(this.userId, 'view-c-room')
 			return RocketChat.models.Rooms.findByTypeAndName 'c', identifier, options
@@ -32,11 +30,9 @@ Meteor.startup ->
 				topic: 1
 				muted: 1
 				archived: 1
-				jitsiTimeout: 1
-				description: 1
 
 		user = RocketChat.models.Users.findOneById this.userId, fields: username: 1
-		return RocketChat.models.Rooms.findByTypeAndNameContainingUsername 'p', identifier, user.username, options
+		return RocketChat.models.Rooms.findByTypeAndNameContainigUsername 'p', identifier, user.username, options
 
 	RocketChat.roomTypes.setPublish 'd', (identifier) ->
 		options =
@@ -47,8 +43,6 @@ Meteor.startup ->
 				u: 1
 				usernames: 1
 				topic: 1
-				jitsiTimeout: 1
-
 		user = RocketChat.models.Users.findOneById this.userId, fields: username: 1
 		if RocketChat.authz.hasPermission(this.userId, 'view-d-room')
 			return RocketChat.models.Rooms.findByTypeContainigUsernames 'd', [user.username, identifier], options

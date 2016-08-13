@@ -8,7 +8,7 @@ Meteor.startup ->
 		]
 		action: (event, instance) ->
 			message = @_arguments[1]
-			RocketChat.MessageAction.hideDropDown()
+			$('.message-dropdown:visible').hide()
 			RoomHistoryManager.getSurroundingMessages(message, 50)
 
 		validation: (message) ->

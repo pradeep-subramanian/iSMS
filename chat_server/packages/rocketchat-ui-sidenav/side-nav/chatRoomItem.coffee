@@ -50,14 +50,15 @@ Template.chatRoomItem.events
 		rid = this.rid
 		name = this.name
 
-		warnText = switch this.t
-			when 'c' then 'Hide_Room_Warning'
-			when 'p' then 'Hide_Group_Warning'
-			when 'd' then 'Hide_Private_Warning'
+		warnText = switch
+			when this.t == 'c' then 'Hide_Room_Warning'
+			when this.t == 'p' then 'Hide_Group_Warning'
+			when this.t == 'd' then 'Hide_Private_Warning'
+
 
 		swal {
 			title: t('Are_you_sure')
-			text: if warnText then t(warnText, name) else ''
+			text: t(warnText, name)
 			type: 'warning'
 			showCancelButton: true
 			confirmButtonColor: '#DD6B55'

@@ -37,7 +37,7 @@ Meteor.methods({
 			attachment.video_size = file.size;
 		}
 
-		const msg = {
+		var msg = {
 			_id: Random.id(),
 			rid: roomId,
 			msg: '',
@@ -48,6 +48,6 @@ Meteor.methods({
 			attachments: [attachment]
 		};
 
-		return Meteor.call('sendMessage', msg);
+		msg = Meteor.call('sendMessage', msg);
 	}
 });

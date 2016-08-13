@@ -1,7 +1,7 @@
 Api = new Restivus
 	useDefaultAuth: true
 	prettyJson: true
-	enableCors: true
+	enableCors: false
 
 
 Api.addRoute 'info', authRequired: false,
@@ -16,14 +16,6 @@ Api.addRoute 'version', authRequired: false,
 Api.addRoute 'publicRooms', authRequired: true,
 	get: ->
 		rooms = RocketChat.models.Rooms.findByType('c', { sort: { msgs:-1 } }).fetch()
-		status: 'success', rooms: rooms
-
-###
-@api {get} /joinedRooms Get joined rooms.
-###
-Api.addRoute 'joinedRooms', authRequired: true,
-	get: ->
-		rooms = RocketChat.models.Rooms.findByContainigUsername(@user.username).fetch()
 		status: 'success', rooms: rooms
 
 # join a room
@@ -41,27 +33,12 @@ Api.addRoute 'rooms/:id/leave', authRequired: true,
 		status: 'success'   # need to handle error
 
 
-###
-@api {get} /rooms/:id/messages?skip=:skip&limit=:limit Get messages in a room.
-@apiParam {Number} id         Room ID
-@apiParam {Number} [skip=0]   Number of results to skip at the beginning
-@apiParam {Number} [limit=50] Maximum number of results to return
-###
+# get messages in a room
 Api.addRoute 'rooms/:id/messages', authRequired: true,
 	get: ->
 		try
-			rid = @urlParams.id
-			# `variable | 0` means converting to int
-			skip = @queryParams.skip | 0 or 0
-			limit = @queryParams.limit | 0 or 50
-			limit = 50 if limit > 50
-			if Meteor.call('canAccessRoom', rid, this.userId)
-				msgs = RocketChat.models.Messages.findVisibleByRoomId(rid,
-					sort:
-						ts: -1
-					skip: skip
-					limit: limit
-				).fetch()
+			if Meteor.call('canAccessRoom', @urlParams.id, this.userId)
+				msgs = RocketChat.models.Messages.findVisibleByRoomId(@urlParams.id, {sort: {ts: -1}, limit: 50}).fetch()
 				status: 'success', messages: msgs
 			else
 				statusCode: 403   # forbidden
@@ -97,6 +74,7 @@ Api.addRoute 'rooms/:id/online', authRequired: true,
 # validate an array of users
 Api.testapiValidateUsers =  (users) ->
 	for user, i in users
+		console.log('validating user...');
 		if user.name?
 			if user.email?
 				if user.pass?
@@ -108,6 +86,7 @@ Api.testapiValidateUsers =  (users) ->
 					if nameValidation.test user.name
 						if  /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]+\b/i.test user.email
 							continue
+		console.log('invalid-user-record', "[restapi] bulk/register -> record #" + i + " is invalid");
 		throw new Meteor.Error 'invalid-user-record', "[restapi] bulk/register -> record #" + i + " is invalid"
 	return
 
@@ -146,23 +125,28 @@ Api.addRoute 'bulk/register', authRequired: true,
 		# restivus 0.8.4 does not support alanning:roles using groups
 		#roleRequired: ['testagent', 'adminautomation']
 		action: ->
+			console.log('registering users...');
 			if RocketChat.authz.hasPermission(@userId, 'bulk-register-user')
 				try
-
+					console.log('user has permission to register');
+					console.log(@bodyParams);
+					console.log('before validation of users');
 					Api.testapiValidateUsers  @bodyParams.users
+					console.log 'user: ' + u.name for u in @bodyParams.users
 					this.response.setTimeout (500 * @bodyParams.users.length)
 					ids = []
 					endCount = @bodyParams.users.length - 1
 					for incoming, i in @bodyParams.users
-						ids[i] = {uid: Meteor.call 'registerUser', incoming}
-						Meteor.runAsUser ids[i].uid, () =>
-							Meteor.call 'setUsername', incoming.name
-							Meteor.call 'joinDefaultChannels'
+					 	ids[i] = {uid: Meteor.call 'registerUser', incoming}
+					 	Meteor.runAsUser ids[i].uid, () =>
+					 		Meteor.call 'setUsername', incoming.name
+					 		Meteor.call 'joinDefaultChannels'
 
 					status: 'success', ids: ids
 				catch e
 					statusCode: 400    # bad request or other errors
 					body: status: 'fail', message: e.name + ' :: ' + e.message
+					console.log "error: " + e.name + ' :: ' + e.message
 			else
 				console.log '[restapi] bulk/register -> '.red, "User does not have 'bulk-register-user' permission"
 				statusCode: 403
@@ -175,13 +159,13 @@ Api.addRoute 'bulk/register', authRequired: true,
 Api.testapiValidateRooms =  (rooms) ->
 	for room, i in rooms
 		if room.name?
-					try
-						nameValidation = new RegExp '^' + RocketChat.settings.get('UTF8_Names_Validation') + '$', 'i'
-					catch
-						nameValidation = new RegExp '^[0-9a-zA-Z-_.]+$', 'i'
+			try
+				nameValidation = new RegExp '^' + RocketChat.settings.get('UTF8_Names_Validation') + '$', 'i'
+			catch
+				nameValidation = new RegExp '^[0-9a-zA-Z-_.]+$', 'i'
 
-					if nameValidation.test room.name
-						continue
+			if nameValidation.test room.name
+				continue		
 		throw new Meteor.Error 'invalid-room-record', "[restapi] bulk/createRoom -> record #" + i + " is invalid"
 	return
 
@@ -196,8 +180,8 @@ Api.testapiValidateRooms =  (rooms) ->
   {
     'rooms':[ {'name': 'room1',
                'members': ['user1', 'user2']
-              },
-              {'name': 'room2',
+  	      },
+  	      {'name': 'room2',
                'members': ['user1', 'user2', 'user3']
               }
               ...
@@ -226,7 +210,9 @@ Api.addRoute 'bulk/createRoom', authRequired: true,
 			if RocketChat.authz.hasPermission(@userId, 'bulk-create-c')
 				try
 					this.response.setTimeout (1000 * @bodyParams.rooms.length)
-					Api.testapiValidateRooms @bodyParams.rooms
+					console.log 'current user is ' + this.userId
+					console.log 'room #' + i + " = " + r.name for r,i in @bodyParams.rooms
+					Api.testapiValidateRooms @bodyParams.rooms					
 					ids = []
 					Meteor.runAsUser this.userId, () =>
 						(ids[i] = Meteor.call 'createChannel', incoming.name, incoming.members) for incoming,i in @bodyParams.rooms
@@ -234,6 +220,7 @@ Api.addRoute 'bulk/createRoom', authRequired: true,
 				catch e
 					statusCode: 400    # bad request or other errors
 					body: status: 'fail', message: e.name + ' :: ' + e.message
+					console.log e.name + ' :: ' + e.message
 			else
 				console.log '[restapi] bulk/createRoom -> '.red, "User does not have 'bulk-create-c' permission"
 				statusCode: 403

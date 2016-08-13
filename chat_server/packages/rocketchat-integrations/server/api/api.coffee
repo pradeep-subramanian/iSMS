@@ -168,7 +168,7 @@ executeIntegrationRest = ->
 			return RocketChat.API.v1.failure 'error-running-script'
 
 	if not @bodyParams?
-		return RocketChat.API.v1.failure 'body-empty'
+		RocketChat.API.v1.failure 'body-empty'
 
 	@bodyParams.bot =
 		i: @integration._id

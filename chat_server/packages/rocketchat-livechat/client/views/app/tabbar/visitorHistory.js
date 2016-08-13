@@ -14,14 +14,8 @@ Template.visitorHistory.helpers({
 		});
 	},
 
-	title() {
-		let title = moment(this.ts).format('L LTS');
-
-		if (this.label) {
-			title += ' - ' + this.label;
-		}
-
-		return title;
+	date() {
+		return moment(this.ts).format('L LTS');
 	}
 });
 

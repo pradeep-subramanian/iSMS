@@ -2,18 +2,18 @@
 # KaTeX is a fast, easy-to-use JavaScript library for TeX math rendering on the web.
 # https://github.com/Khan/KaTeX
 ###
+
 class Katex
-	constructor: ->
-		@delimiters_map = [
-			{ opener: '\\[', closer: '\\]', displayMode: true , enabled: () => @parenthesis_syntax_enabled() },
-			{ opener: '\\(', closer: '\\)', displayMode: false, enabled: () => @parenthesis_syntax_enabled() },
-			{ opener: '$$' , closer: '$$' , displayMode: true , enabled: () => @dollar_syntax_enabled() },
-			{ opener: '$'  , closer: '$'  , displayMode: false, enabled: () => @dollar_syntax_enabled() },
-		]
+	delimiters_map: [
+		{ opener: '\\[', closer: '\\]', displayMode: true  },
+		{ opener: '\\(', closer: '\\)', displayMode: false },
+		{ opener: '$$' , closer: '$$' , displayMode: true  },
+		{ opener: '$'  , closer: '$'  , displayMode: false },
+	]
 
 	# Searches for the first opening delimiter in the string from a given position
 	find_opening_delimiter: (str, start) -> # Search the string for each opening delimiter
-		matches = ({options: o, pos: str.indexOf(o.opener, start)} for o in @delimiters_map when o.enabled())
+		matches = ({options: o, pos: str.indexOf(o.opener, start)} for o in @delimiters_map)
 		positions = (m.pos for m in matches when m.pos >= 0)
 
 		# No opening delimiters were found
@@ -29,7 +29,7 @@ class Katex
 		return match
 
 	class Boundary
-		length: ->
+		length: () ->
 			return @end - @start
 
 		extract: (str) ->
@@ -92,13 +92,13 @@ class Katex
 		catch e
 			display_mode = if displayMode then "block" else "inline"
 			rendered =  "<div class=\"katex-error katex-#{display_mode}-error\">"
-			rendered += 	"#{s.escapeHTML e.message}"
+			rendered += 	"#{e.message}"
 			rendered += "</div>"
 
 		return rendered
 
 	# Takes a string and renders all latex blocks inside it
-	render: (str, render_func) ->
+	render: (str) ->
 		result = ''
 
 		loop
@@ -114,7 +114,7 @@ class Katex
 
 			# Add to the reuslt what comes before the latex block as well as
 			# the rendered latex content
-			rendered = render_func parts.latex, match.options.displayMode
+			rendered = @render_latex parts.latex, match.options.displayMode
 			result += parts.before + rendered
 
 			# Set what comes after the latex block to be examined next
@@ -125,7 +125,7 @@ class Katex
 	# Takes a rocketchat message and renders latex in its content
 	render_message: (message) ->
 		# Render only if enabled in admin panel
-		if @katex_enabled()
+		if RocketChat.settings.get('Katex_Enabled')
 			msg = message
 
 			if not _.isString message
@@ -134,22 +134,7 @@ class Katex
 				else
 					return message
 
-			if _.isString message
-				render_func = (latex, displayMode) =>
-					return @render_latex latex, displayMode
-			else
-				message.tokens ?= []
-
-				render_func = (latex, displayMode) =>
-					token = "=&=#{Random.id()}=&="
-
-					message.tokens.push
-						token: token
-						text: @render_latex latex, displayMode
-
-					return token
-
-			msg = @render msg, render_func
+			msg = @render msg
 
 			if not _.isString message
 				message.html = msg
@@ -158,20 +143,10 @@ class Katex
 
 		return message
 
-	katex_enabled: ->
-		return RocketChat.settings.get('Katex_Enabled')
-
-	dollar_syntax_enabled: ->
-		return RocketChat.settings.get('Katex_Dollar_Syntax')
-
-	parenthesis_syntax_enabled: ->
-		return RocketChat.settings.get('Katex_Parenthesis_Syntax')
-
-
 RocketChat.katex = new Katex
 
 cb = RocketChat.katex.render_message.bind(RocketChat.katex)
-RocketChat.callbacks.add 'renderMessage', cb, RocketChat.callbacks.priority.HIGH - 1
+RocketChat.callbacks.add 'renderMessage', cb
 
 if Meteor.isClient
 	Blaze.registerHelper 'RocketChatKatex', (text) ->

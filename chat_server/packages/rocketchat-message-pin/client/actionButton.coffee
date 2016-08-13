@@ -15,14 +15,11 @@ Meteor.startup ->
 				if error
 					return handleError(error)
 		validation: (message) ->
-			room = RocketChat.models.Rooms.findOne({ _id: message.rid })
-
-			if Array.isArray(room.usernames) && room.usernames.indexOf(Meteor.user().username) is -1
-				return false
-			else if message.pinned or not RocketChat.settings.get('Message_AllowPinning')
+			if message.pinned or not RocketChat.settings.get('Message_AllowPinning')
 				return false
 
 			return RocketChat.authz.hasAtLeastOnePermission 'pin-message', message.rid
+
 		order: 20
 
 	RocketChat.MessageAction.addButton
@@ -41,14 +38,11 @@ Meteor.startup ->
 				if error
 					return handleError(error)
 		validation: (message) ->
-			room = RocketChat.models.Rooms.findOne({ _id: message.rid })
-
-			if Array.isArray(room.usernames) && room.usernames.indexOf(Meteor.user().username) is -1
-				return false
-			else if not message.pinned or not RocketChat.settings.get('Message_AllowPinning')
+			if not message.pinned or not RocketChat.settings.get('Message_AllowPinning')
 				return false
 
 			return RocketChat.authz.hasAtLeastOnePermission 'pin-message', message.rid
+
 		order: 21
 
 	RocketChat.MessageAction.addButton
@@ -60,15 +54,8 @@ Meteor.startup ->
 		]
 		action: (event, instance) ->
 			message = @_arguments[1]
-			RocketChat.MessageAction.hideDropDown()
+			$('.message-dropdown:visible').hide()
 			RoomHistoryManager.getSurroundingMessages(message, 50)
-		validation: (message) ->
-			room = RocketChat.models.Rooms.findOne({ _id: message.rid })
-
-			if Array.isArray(room.usernames) && room.usernames.indexOf(Meteor.user().username) is -1
-				return false
-				
-			return true
 		order: 100
 
 	RocketChat.MessageAction.addButton
@@ -81,14 +68,8 @@ Meteor.startup ->
 		]
 		action: (event, instance) ->
 			message = @_arguments[1]
-			RocketChat.MessageAction.hideDropDown()
-			$(event.currentTarget).attr('data-clipboard-text', RocketChat.MessageAction.getPermaLink(message._id));
+			msg = $(event.currentTarget).closest('.message')[0]
+			$("\##{msg.id} .message-dropdown").hide()
+			$(event.currentTarget).attr('data-clipboard-text', document.location.origin + document.location.pathname + '?msg=' + msg.id);
 			toastr.success(TAPi18n.__('Copied'))
-		validation: (message) ->
-			room = RocketChat.models.Rooms.findOne({ _id: message.rid })
-
-			if Array.isArray(room.usernames) && room.usernames.indexOf(Meteor.user().username) is -1
-				return false
-				
-			return true
 		order: 101

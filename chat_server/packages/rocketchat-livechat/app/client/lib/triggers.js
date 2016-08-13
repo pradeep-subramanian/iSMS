@@ -2,17 +2,14 @@ this.Triggers = (function() {
 	var triggers = [];
 	var initiated = false;
 	var requests = [];
-	var enabled = true;
 
-	var fire = function(trigger) {
-		if (!enabled || Meteor.userId()) {
+	var fire = function(actions) {
+		if (Meteor.userId()) {
+			// console.log('already logged user - does nothing');
 			return;
 		}
-		trigger.actions.forEach(function(action) {
+		actions.forEach(function(action) {
 			if (action.name === 'send-message') {
-				// flag to skip the trigger if the action is 'send-message'
-				trigger.skip = true;
-
 				var roomId = visitor.getRoom();
 
 				if (!roomId) {
@@ -39,14 +36,11 @@ this.Triggers = (function() {
 			return requests.push(request);
 		}
 		triggers.forEach(function(trigger) {
-			if (trigger.skip) {
-				return;
-			}
 			trigger.conditions.forEach(function(condition) {
 				switch (condition.name) {
 					case 'page-url':
 						if (request.location.href.match(new RegExp(condition.value))) {
-							fire(trigger);
+							fire(trigger.actions);
 						}
 						break;
 
@@ -55,7 +49,7 @@ this.Triggers = (function() {
 							clearTimeout(trigger.timeout);
 						}
 						trigger.timeout = setTimeout(function() {
-							fire(trigger);
+							fire(trigger.actions);
 						}, parseInt(condition.value) * 1000);
 						break;
 				}
@@ -79,19 +73,9 @@ this.Triggers = (function() {
 		}
 	};
 
-	var setDisabled = function() {
-		enabled = false;
-	};
-
-	var setEnabled = function() {
-		enabled = true;
-	};
-
 	return {
 		init: init,
 		processRequest: processRequest,
-		setTriggers: setTriggers,
-		setDisabled: setDisabled,
-		setEnabled: setEnabled
+		setTriggers: setTriggers
 	};
 }());

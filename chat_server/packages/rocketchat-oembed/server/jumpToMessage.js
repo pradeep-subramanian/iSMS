@@ -18,8 +18,7 @@ RocketChat.callbacks.add('beforeSaveMessage', (msg) => {
 								'text' : jumpToMessage.msg,
 								'author_name' : jumpToMessage.u.username,
 								'author_icon' : getAvatarUrlFromUsername(jumpToMessage.u.username),
-								'message_link' : item.url,
-								'ts': jumpToMessage.ts
+								'ts': new Date()
 							});
 							item.ignoreParse = true;
 						}

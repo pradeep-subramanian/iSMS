@@ -97,4 +97,4 @@ RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 
 	return message;
 
-}, RocketChat.callbacks.priority.LOW, 'sendEmailOnMessage');
+}, RocketChat.callbacks.priority.LOW);

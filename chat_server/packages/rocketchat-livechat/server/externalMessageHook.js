@@ -59,4 +59,4 @@ RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 	});
 
 	return message;
-}, RocketChat.callbacks.priority.LOW, 'externalWebHook');
+}, RocketChat.callbacks.priority.LOW);

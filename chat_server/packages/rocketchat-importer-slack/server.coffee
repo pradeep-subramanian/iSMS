@@ -117,7 +117,6 @@ Importer.Slack = class Importer.Slack extends Importer.Base
 
 						if existantUser
 							user.rocketId = existantUser._id
-							RocketChat.models.Users.update { _id: user.rocketId }, { $addToSet: { importIds: user.id } }
 							@userTags.push
 								slack: "<@#{user.id}>"
 								slackLong: "<@#{user.id}|#{user.name}>"
@@ -136,8 +135,6 @@ Importer.Slack = class Importer.Slack extends Importer.Base
 								# Slack's is -18000 which translates to Rocket.Chat's after dividing by 3600
 								if user.tz_offset
 									Meteor.call 'updateUserUtcOffset', user.tz_offset / 3600
-
-							RocketChat.models.Users.update { _id: userId }, { $addToSet: { importIds: user.id } }
 
 							if user.profile.real_name
 								RocketChat.models.Users.setName userId, user.profile.real_name
@@ -162,7 +159,6 @@ Importer.Slack = class Importer.Slack extends Importer.Base
 							if channel.is_general and channel.name isnt existantRoom?.name
 								Meteor.call 'saveRoomSettings', 'GENERAL', 'roomName', channel.name
 							channel.rocketId = if channel.is_general then 'GENERAL' else existantRoom._id
-							RocketChat.models.Rooms.update { _id: channel.rocketId }, { $addToSet: { importIds: channel.id } }
 						else
 							users = []
 							for member in channel.members when member isnt channel.creator
@@ -193,7 +189,7 @@ Importer.Slack = class Importer.Slack extends Importer.Base
 							if not _.isEmpty(channel.purpose?.value) and channel.purpose.last_set > lastSetTopic
 								roomUpdate.topic = channel.purpose.value
 
-							RocketChat.models.Rooms.update { _id: channel.rocketId }, { $set: roomUpdate, $addToSet: { importIds: channel.id } }
+							RocketChat.models.Rooms.update { _id: channel.rocketId }, { $set: roomUpdate }
 
 						@addCountCompleted 1
 			@collection.update { _id: @channels._id }, { $set: { 'channels': @channels.channels }}
@@ -226,7 +222,7 @@ Importer.Slack = class Importer.Slack extends Importer.Base
 												msgObj =
 													msg: "_#{@convertSlackMessageToRocketChat(message.text)}_"
 												_.extend msgObj, msgDataDefaults
-												RocketChat.sendMessage @getRocketUser(message.user), msgObj, room, true
+												RocketChat.sendMessage @getRocketUser(message.user), msgObj, room
 											else if message.subtype is 'bot_message'
 												botUser = RocketChat.models.Users.findOneById 'rocket.cat', { fields: { username: 1 }}
 												botUsername = if @bots[message.bot_id] then @bots[message.bot_id]?.name else message.username
@@ -245,7 +241,7 @@ Importer.Slack = class Importer.Slack extends Importer.Base
 												if message.icons?
 													msgObj.emoji = message.icons.emoji
 
-												RocketChat.sendMessage botUser, msgObj, room, true
+												RocketChat.sendMessage botUser, msgObj, room, upsert: true
 											else if message.subtype is 'channel_purpose'
 												RocketChat.models.Messages.createRoomSettingsChangedWithTypeRoomIdMessageAndUser 'room_changed_topic', room._id, message.purpose, @getRocketUser(message.user), msgDataDefaults
 											else if message.subtype is 'channel_topic'
@@ -291,7 +287,7 @@ Importer.Slack = class Importer.Slack extends Importer.Base
 												if message.edited?
 													msgObj.ets = new Date(parseInt(message.edited.ts.split('.')[0]) * 1000)
 
-												RocketChat.sendMessage @getRocketUser(message.user), msgObj, room, true
+												RocketChat.sendMessage @getRocketUser(message.user), msgObj, room, upsert: true
 									@addCountCompleted 1
 			console.log missedTypes
 			@updateProgress Importer.ProgressStep.FINISHING

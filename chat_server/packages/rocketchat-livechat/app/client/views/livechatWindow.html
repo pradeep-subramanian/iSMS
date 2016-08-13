@@ -1,15 +1,9 @@
 <template name="livechatWindow">
 	{{#if livechatStarted}}
 		<div class="livechat-room">
-			<div class="title" style="background-color:{{color}}; color: {{fontColor}}">
+			<div class="title" style="background-color:{{color}}">
 				<div class="toolbar">
 					&nbsp;
-					{{#if soundActive}}
-						<i class="sound icon-bell-alt" title="Toggle notification sound"></i>
-					{{else}}
-						<i class="sound icon-bell-off" title="toggle notification sound"></i>
-					{{/if}}
-
 					{{#unless popoutActive}}
 						<i class="popout icon-link-ext" title="Open in a new window"></i>
 					{{/unless}}
@@ -25,11 +19,9 @@
 				{{/if}}
 			{{else}}
 				<div class="offline">
-					{{> offlineForm (offlineData)}}
+					{{> offlineForm offlineMessage=offlineMessage}}
 				</div>
 			{{/if}}
-
-			{{> poweredBy }}
 		</div>
 	{{/if}}
 </template>

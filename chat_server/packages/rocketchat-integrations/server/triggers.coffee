@@ -144,14 +144,6 @@ ExecuteTriggerUrl = (url, trigger, message, room, tries=0) ->
 		user_name: message.u.username
 		text: message.msg
 
-	if message.alias?
-		data.alias = message.alias
-
-	if message.bot?
-		data.bot = message.bot
-	else
-		data.bot = false
-
 	if word?
 		data.trigger_word = word
 
@@ -300,4 +292,4 @@ ExecuteTriggers = (message, room) ->
 	return message
 
 
-RocketChat.callbacks.add 'afterSaveMessage', ExecuteTriggers, RocketChat.callbacks.priority.LOW, 'ExecuteTriggers'
+RocketChat.callbacks.add 'afterSaveMessage', ExecuteTriggers, RocketChat.callbacks.priority.LOW

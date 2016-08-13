@@ -98,9 +98,7 @@ Template.accountProfile.onRendered ->
 
 Template.accountProfile.events
 	'click .submit button': (e, instance) ->
-		user = Meteor.user()
-		reqPass = ((_.trim($('#email').val()) isnt user?.emails?[0]?.address) or _.trim($('#password').val())) and s.trim(user?.services?.password?.bcrypt)
-		unless reqPass
+		unless s.trim Meteor.user()?.services?.password?.bcrypt
 			return instance.save()
 
 		swal

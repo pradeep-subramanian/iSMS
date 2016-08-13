@@ -5,10 +5,10 @@ BlazeLayout.setRoot 'body'
 
 FlowRouter.subscriptions = ->
 	Tracker.autorun =>
-		if Meteor.userId()
-			RoomManager.init()
-			@register 'userData', Meteor.subscribe('userData')
-			@register 'activeUsers', Meteor.subscribe('activeUsers')
+		RoomManager.init()
+		@register 'userData', Meteor.subscribe('userData')
+		@register 'activeUsers', Meteor.subscribe('activeUsers')
+		@register 'admin-settings', Meteor.subscribe('admin-settings')
 
 
 FlowRouter.route '/',

@@ -7,6 +7,7 @@ Template.secretURL.helpers
 
 
 Template.secretURL.onCreated ->
+	@subscribe 'admin-settings'
 	@hashIsValid = new ReactiveVar false
 	@hashReady = new ReactiveVar false
 
