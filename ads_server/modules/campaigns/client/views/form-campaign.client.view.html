@@ -37,13 +37,21 @@
             <p class="help-block error-text" ng-message="required">Remaining Budget is required.</p>
           </div>
 		  
+		  <label class="control-label" for="advertisement">Ads to Select</label>
+          <input name="advertisement" type="text" ng-model="vm.campaign.advertisement" id="advertisement" class="form-control" placeholder="Advertisements" required>
+          <div ng-messages="vm.form.campaignForm.advertisement.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Advertisement is required.</p>
+          </div>
+		  <!--
 		  <div>
 		  Your current ads:
 		  <div ng-repeat="ad in vm.campaign.advertisement">
 				<a href="http://localhost:4000/ads/{{ad._id}}"><h1>{{ad.name}}</h1></a>{{ad}}
 		  </div>
 		  </div>
+		  -->
 		  <!-- Working List of All Ads -->
+		  <!--
 			<label for="adsList" class="form-control-static" style="vertical-align:middle; margin-right:2px;">These are the list of advertisements available: :</label>
           <select name="adsList" id="adsList" class="form-control" style="margin-right:2px;"
                   ng-options="ad as ad.name for ad in vm.adsList"
@@ -51,6 +59,7 @@
             <option value=""></option>
           </select>
 		  </div>
+		  -->
 		  
         </div>
         <div class="form-group">		
