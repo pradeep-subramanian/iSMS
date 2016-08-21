@@ -1,42 +1,22 @@
 'use strict';
 
 /**
- * Render the main application page
+ * main application route
  */
 exports.renderIndex = function (req, res) {
-  res.render('modules/core/server/views/index', {
-    user: req.user || null
-  });
+  res.status(200).send();
 };
 
 /**
- * Render the server error page
+ * server error 
  */
 exports.renderServerError = function (req, res) {
-  res.status(500).render('modules/core/server/views/500', {
-    error: 'Oops! Something went wrong...'
-  });
+  res.status(500).send();
 };
 
 /**
- * Render the server not found responses
- * Performs content-negotiation on the Accept HTTP header
+ * not found response
  */
 exports.renderNotFound = function (req, res) {
-
-  res.status(404).format({
-    'text/html': function () {
-      res.render('modules/core/server/views/404', {
-        url: req.originalUrl
-      });
-    },
-    'application/json': function () {
-      res.json({
-        error: 'Path not found'
-      });
-    },
-    'default': function () {
-      res.send('Path not found');
-    }
-  });
+  res.status(404).send();
 };
