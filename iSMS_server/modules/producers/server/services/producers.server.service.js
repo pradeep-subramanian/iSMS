@@ -33,7 +33,6 @@ exports.delete = function(entity, successCallback, errorCallback) {
             successCallback(entity);
         }
     });
-    producerRepository.delete(entity, cb);
 };
 
 exports.list = function(params, successCallback, errorCallback) {

@@ -33,7 +33,6 @@ exports.delete = function(entity, successCallback, errorCallback) {
             successCallback(entity);
         }
     });
-    adRepository.delete(entity, cb);
 };
 
 exports.list = function(params, successCallback, errorCallback) {

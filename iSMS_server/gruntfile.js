@@ -26,49 +26,9 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      serverViews: {
-        files: defaultAssets.server.views,
-        options: {
-          livereload: true
-        }
-      },
       serverJS: {
         files: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
         tasks: ['jshint'],
-        options: {
-          livereload: true
-        }
-      },
-      clientViews: {
-        files: defaultAssets.client.views,
-        options: {
-          livereload: true
-        }
-      },
-      clientJS: {
-        files: defaultAssets.client.js,
-        tasks: ['jshint'],
-        options: {
-          livereload: true
-        }
-      },
-      clientCSS: {
-        files: defaultAssets.client.css,
-        tasks: ['csslint'],
-        options: {
-          livereload: true
-        }
-      },
-      clientSCSS: {
-        files: defaultAssets.client.sass,
-        tasks: ['sass', 'csslint'],
-        options: {
-          livereload: true
-        }
-      },
-      clientLESS: {
-        files: defaultAssets.client.less,
-        tasks: ['less', 'csslint'],
         options: {
           livereload: true
         }
@@ -93,7 +53,7 @@ module.exports = function (grunt) {
     },
     jshint: {
       all: {
-        src: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e),
+        src: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, testAssets.tests.server),
         options: {
           jshintrc: true,
           node: true,
@@ -104,63 +64,7 @@ module.exports = function (grunt) {
     },
     eslint: {
       options: {},
-      target: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e)
-    },
-    csslint: {
-      options: {
-        csslintrc: '.csslintrc'
-      },
-      all: {
-        src: defaultAssets.client.css
-      }
-    },
-    ngAnnotate: {
-      production: {
-        files: {
-          'public/dist/application.js': defaultAssets.client.js
-        }
-      }
-    },
-    uglify: {
-      production: {
-        options: {
-          mangle: false
-        },
-        files: {
-          'public/dist/application.min.js': 'public/dist/application.js'
-        }
-      }
-    },
-    cssmin: {
-      combine: {
-        files: {
-          'public/dist/application.min.css': defaultAssets.client.css
-        }
-      }
-    },
-    sass: {
-      dist: {
-        files: [{
-          expand: true,
-          src: defaultAssets.client.sass,
-          ext: '.css',
-          rename: function (base, src) {
-            return src.replace('/scss/', '/css/');
-          }
-        }]
-      }
-    },
-    less: {
-      dist: {
-        files: [{
-          expand: true,
-          src: defaultAssets.client.less,
-          ext: '.css',
-          rename: function (base, src) {
-            return src.replace('/less/', '/css/');
-          }
-        }]
-      }
+      target: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, testAssets.tests.server)
     },
     'node-inspector': {
       custom: {
@@ -246,8 +150,6 @@ module.exports = function (grunt) {
     // Get the callback
     var done = this.async();
 
-    grunt.file.mkdir(path.normalize(__dirname + '/modules/users/client/img/profile/uploads'));
-
     done();
   });
 
@@ -297,7 +199,7 @@ module.exports = function (grunt) {
   });
 
   // Lint CSS and JavaScript files.
-  grunt.registerTask('lint', ['sass', 'less', 'jshint', 'eslint', 'csslint']);
+  grunt.registerTask('lint', ['jshint', 'eslint', 'csslint']);
 
   // Lint project files and minify them into two production files.
   grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'cssmin']);
@@ -305,8 +207,6 @@ module.exports = function (grunt) {
   // Run the project tests
   grunt.registerTask('test', ['env:test', 'lint', 'mkdir:upload', 'copy:localConfig', 'server', 'mochaTest', 'karma:unit', 'protractor']);
   grunt.registerTask('test:server', ['env:test', 'lint', 'server', 'mochaTest']);
-  grunt.registerTask('test:client', ['env:test', 'lint', 'karma:unit']);
-  grunt.registerTask('test:e2e', ['env:test', 'lint', 'dropdb', 'server', 'protractor']);
   // Run project coverage
   grunt.registerTask('coverage', ['env:test', 'lint', 'mocha_istanbul:coverage', 'karma:unit']);
 

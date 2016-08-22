@@ -6,7 +6,7 @@ var path = require('path'),
   campaignRepository = new repository.Repository('Campaign');
 
 exports.create = function(entity, successCallback, errorCallback) {
-    adRepository.save(entity, function(err) {
+    campaignRepository.save(entity, function(err) {
         if (err) {
             errorCallback(err);
         } else {
@@ -16,7 +16,7 @@ exports.create = function(entity, successCallback, errorCallback) {
 };
 
 exports.update = function(entity, successCallback, errorCallback) {
-    adRepository.update(entity, function(err){
+    campaignRepository.update(entity, function(err){
         if (err) {
             errorCallback(err);
         } else {
@@ -26,18 +26,17 @@ exports.update = function(entity, successCallback, errorCallback) {
 };
 
 exports.delete = function(entity, successCallback, errorCallback) {
-    adRepository.delete(entity, function(err) {
+    campaignRepository.delete(entity, function(err) {
         if (err) {
             errorCallback(err);
         } else {
             successCallback(entity);
         }
     });
-    adRepository.delete(entity, cb);
 };
 
 exports.list = function(params, successCallback, errorCallback) {
-    adRepository.findAll(params, function(err, entities) {
+    campaignRepository.findAll(params, function(err, entities) {
         if (err) {
             errorCallback(err);
         } else {
@@ -53,7 +52,7 @@ exports.list = function(params, successCallback, errorCallback) {
 };
 
 exports.getItem = function(id, successCallback, errorCallback) {
-    adRepository.findById(id, function(err, entity) {
+    campaignRepository.findById(id, function(err, entity) {
         if (err) {
             errorCallback(err);
         } else {

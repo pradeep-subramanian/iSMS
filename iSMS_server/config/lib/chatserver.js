@@ -26,7 +26,7 @@ function login (successCallback, errorCallback) {
         //.field("password", config.chatserver.auth.adminPass)
         .send(requestData)
         .end(function(response) {
-            if (response.status != 200) {
+            if (response.status !== 200) {
                 console.log("Failed to connect to chat server " + config.chatserver.serverURL);
                 console.log("Response status " + response.status);
 
@@ -45,7 +45,7 @@ function login (successCallback, errorCallback) {
                 }                
             }
         });
-};
+}
 
 function logout(token) {
     var requestURL = config.chatserver.serverURL + '/api/logout';
@@ -53,9 +53,10 @@ function logout(token) {
     unirest.post(requestURL)
         .header("X-Auth-Token", token.authToken)
         .header("X-User-Id", token.userId);
-};
+}
 
 function registerUser(userName, userEmail, password, successCallback, errorCallback) {
+    /*jshint validthis: true */
     var _this = this;
     var requestURL = config.chatserver.serverURL + '/api/bulk/register';
     
@@ -73,7 +74,7 @@ function registerUser(userName, userEmail, password, successCallback, errorCallb
             .header("Content-Type", "application/json")
             .send(JSON.stringify(data))
             .end(function(response) {
-                if (response.status != 200) {
+                if (response.status !== 200) {
                     console.log("Failed to register to chat user");
                     console.log("Response status " + response.status);
 
@@ -98,9 +99,10 @@ function registerUser(userName, userEmail, password, successCallback, errorCallb
     };
     
     login(postConnect, errorCallback);
-};
+}
 
 function getPublicRooms(successCallback, errorCallback) {
+    /*jshint validthis: true */
     var _this = this;
     var requestURL = config.chatserver.serverURL + '/api/publicRooms';
     
@@ -112,7 +114,7 @@ function getPublicRooms(successCallback, errorCallback) {
             .end(function(response) {
                 console.log(response.body);
 
-                if (response.status != 200) {
+                if (response.status !== 200) {
                     console.log("Failed to get public rooms");
                     console.log("Response status " + response.status);
 
@@ -136,5 +138,5 @@ function getPublicRooms(successCallback, errorCallback) {
     };
     
     login(postConnect, errorCallback);
-};
+}
 

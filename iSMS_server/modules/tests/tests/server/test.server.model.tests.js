@@ -11,14 +11,14 @@ var should = require('should'),
 /**
  * Globals
  */
-var user, test;
+var user1, test1;
 
 /**
  * Unit tests
  */
 describe('Test Model Unit Tests:', function() {
   beforeEach(function(done) {
-    user = new User({
+    user1 = new User({
       firstName: 'Full',
       lastName: 'Name',
       displayName: 'Full Name',
@@ -27,10 +27,10 @@ describe('Test Model Unit Tests:', function() {
       password: 'password'
     });
 
-    user.save(function() { 
-      test = new Test({
+    user1.save(function() { 
+      test1 = new Test({
         name: 'Test Name',
-        user: user
+        user: user1
       });
 
       done();
@@ -40,16 +40,16 @@ describe('Test Model Unit Tests:', function() {
   describe('Method Save', function() {
     it('should be able to save without problems', function(done) {
       this.timeout(0);
-      return test.save(function(err) {
+      return test1.save(function(err) {
         should.not.exist(err);
         done();
       });
     });
 
     it('should be able to show an error when try to save without name', function(done) { 
-      test.name = '';
+      test1.name = '';
 
-      return test.save(function(err) {
+      return test1.save(function(err) {
         should.exist(err);
         done();
       });

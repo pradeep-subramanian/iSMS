@@ -11,7 +11,7 @@ var should = require('should'),
 /**
  * Globals
  */
-var app, agent, credentials, user, test;
+var app, agent, credentials, user1, test1;
 
 /**
  * Test routes tests
@@ -34,7 +34,7 @@ describe('Test CRUD tests', function () {
     };
 
     // Create a new user
-    user = new User({
+    user1 = new User({
       firstName: 'Full',
       lastName: 'Name',
       displayName: 'Full Name',
@@ -45,8 +45,8 @@ describe('Test CRUD tests', function () {
     });
 
     // Save a user to the test db and create new Test
-    user.save(function () {
-      test = {
+    user1.save(function () {
+      test1 = {
         name: 'Test name'
       };
 
@@ -65,11 +65,11 @@ describe('Test CRUD tests', function () {
         }
 
         // Get the userId
-        var userId = user.id;
+        var userId = user1.id;
 
         // Save a new Test
         agent.post('/api/tests')
-          .send(test)
+          .send(test1)
           .expect(200)
           .end(function (testSaveErr, testSaveRes) {
             // Handle Test save error
@@ -101,7 +101,7 @@ describe('Test CRUD tests', function () {
 
   it('should not be able to save an Test if not logged in', function (done) {
     agent.post('/api/tests')
-      .send(test)
+      .send(test1)
       .expect(403)
       .end(function (testSaveErr, testSaveRes) {
         // Call the assertion callback
@@ -123,11 +123,11 @@ describe('Test CRUD tests', function () {
         }
 
         // Get the userId
-        var userId = user.id;
+        var userId = user1.id;
 
         // Save a new Test
         agent.post('/api/tests')
-          .send(test)
+          .send(test1)
           .expect(400)
           .end(function (testSaveErr, testSaveRes) {
             // Set message assertion
@@ -150,11 +150,11 @@ describe('Test CRUD tests', function () {
         }
 
         // Get the userId
-        var userId = user.id;
+        var userId = user1.id;
 
         // Save a new Test
         agent.post('/api/tests')
-          .send(test)
+          .send(test1)
           .expect(200)
           .end(function (testSaveErr, testSaveRes) {
             // Handle Test save error
@@ -163,11 +163,11 @@ describe('Test CRUD tests', function () {
             }
 
             // Update Test name
-            test.name = 'WHY YOU GOTTA BE SO MEAN?';
+            test1.name = 'WHY YOU GOTTA BE SO MEAN?';
 
             // Update an existing Test
             agent.put('/api/tests/' + testSaveRes.body._id)
-              .send(test)
+              .send(test1)
               .expect(200)
               .end(function (testUpdateErr, testUpdateRes) {
                 // Handle Test update error
@@ -188,7 +188,7 @@ describe('Test CRUD tests', function () {
 
   it('should be able to get a list of Tests if not signed in', function (done) {
     // Create new Test model instance
-    var testObj = new Test(test);
+    var testObj = new Test(test1);
 
     // Save the test
     testObj.save(function () {
@@ -207,14 +207,14 @@ describe('Test CRUD tests', function () {
 
   it('should be able to get a single Test if not signed in', function (done) {
     // Create new Test model instance
-    var testObj = new Test(test);
+    var testObj = new Test(test1);
 
     // Save the Test
     testObj.save(function () {
       request(app).get('/api/tests/' + testObj._id)
         .end(function (req, res) {
           // Set assertion
-          res.body.should.be.instanceof(Object).and.have.property('name', test.name);
+          res.body.should.be.instanceof(Object).and.have.property('name', test1.name);
 
           // Call the assertion callback
           done();
@@ -257,11 +257,11 @@ describe('Test CRUD tests', function () {
         }
 
         // Get the userId
-        var userId = user.id;
+        var userId = user1.id;
 
         // Save a new Test
         agent.post('/api/tests')
-          .send(test)
+          .send(test1)
           .expect(200)
           .end(function (testSaveErr, testSaveRes) {
             // Handle Test save error
@@ -271,7 +271,7 @@ describe('Test CRUD tests', function () {
 
             // Delete an existing Test
             agent.delete('/api/tests/' + testSaveRes.body._id)
-              .send(test)
+              .send(test1)
               .expect(200)
               .end(function (testDeleteErr, testDeleteRes) {
                 // Handle test error error
@@ -291,10 +291,10 @@ describe('Test CRUD tests', function () {
 
   it('should not be able to delete an Test if not signed in', function (done) {
     // Set Test user
-    test.user = user;
+    test1.user = user1;
 
     // Create new Test model instance
-    var testObj = new Test(test);
+    var testObj = new Test(test1);
 
     // Save the Test
     testObj.save(function () {
@@ -350,7 +350,7 @@ describe('Test CRUD tests', function () {
 
           // Save a new Test
           agent.post('/api/tests')
-            .send(test)
+            .send(test1)
             .expect(200)
             .end(function (testSaveErr, testSaveRes) {
               // Handle Test save error
@@ -359,7 +359,7 @@ describe('Test CRUD tests', function () {
               }
 
               // Set assertions on new Test
-              (testSaveRes.body.name).should.equal(test.name);
+              (testSaveRes.body.name).should.equal(test1.name);
               should.exist(testSaveRes.body.user);
               should.equal(testSaveRes.body.user._id, orphanId);
 
