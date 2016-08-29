@@ -1,0 +1,80 @@
+[4mRunning "env:test" (env) task[24m
+
+[4mRunning "jshint:all" (jshint) task[24m
+[32m>> [39m80 files lint free.
+
+[4mRunning "mkdir:upload" task[24m
+
+[4mRunning "copy:localConfig" (copy) task[24m
+
+[4mRunning "server" task[24m
+
+
+connecting to mongo db mongodb://localhost/mean-test
+--
+iSMS - Test Environment
+Environment:			test
+Port:				3001
+Database:				mongodb://localhost/mean-test
+App version:			0.4.2
+MEAN.JS version:			0.4.2
+--
+
+[4mRunning "mochaTest:src" (mochaTest) task[24m
+
+
+  Ad Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      √ should be able to show an error when try to save without name 
+
+  Ad CRUD tests
+    2) should be able to save a Ad if logged in
+    √ should not be able to save an Ad if not logged in 
+    √ should not be able to save an Ad if no name is provided (78ms)
+    3) should be able to update an Ad if signed in
+    4) should be able to get a list of Ads if not signed in
+    5) should be able to get a single Ad if not signed in
+    √ should return proper error for single Ad with an invalid Id, if not signed in 
+    6) should return proper error for single Ad which doesnt exist, if not signed in
+    7) should be able to delete an Ad if signed in
+    8) should not be able to delete an Ad if not signed in
+    9) should be able to get a single Ad that has an orphaned user reference
+
+  Campaign Model Unit Tests:
+    Method Save
+      10) should be able to save without problems
+      √ should be able to show an error when try to save without name 
+
+  Campaign CRUD tests
+    11) should be able to save a Campaign if logged in
+    √ should not be able to save an Campaign if not logged in 
+    √ should not be able to save an Campaign if no name is provided (73ms)
+    12) should be able to update an Campaign if signed in
+    13) should be able to get a list of Campaigns if not signed in
+    14) should be able to get a single Campaign if not signed in
+    √ should return proper error for single Campaign with an invalid Id, if not signed in 
+    15) should return proper error for single Campaign which doesnt exist, if not signed in
+    16) should be able to delete an Campaign if signed in
+    17) should not be able to delete an Campaign if not signed in
+    18) should be able to get a single Campaign that has an orphaned user reference
+
+  Configuration Tests:
+    Testing default seedDB
+      √ should have seedDB configuration set for "regular" user 
+      √ should have seedDB configuration set for admin user 
+      √ should not be an admin user to begin with 
+      √ should not be a "regular" user to begin with 
+      √ should seed ONLY the admin user account when NODE_ENV is set to "production" (73ms)
+      √ should seed admin, and "regular" user accounts when NODE_ENV is set to "test" (133ms)
+      √ should seed admin, and "regular" user accounts when NODE_ENV is set to "test" when they already exist (122ms)
+      √ should ONLY seed admin user account when NODE_ENV is set to "production" with custom admin (53ms)
+      √ should seed admin, and "regular" user accounts when NODE_ENV is set to "test" with custom options (171ms)
+      √ should NOT seed admin user account if it already exists when NODE_ENV is set to "production" 
+      √ should NOT seed "regular" user account if missing email when NODE_ENV set to "test" 
+    Testing Session Secret Configuration
+      √ should warn if using default session secret when running in production 
+      √ should accept non-default session secret when running in production 
+      √ should accept default session secret when running in development 
+      √ should accept default session secret when running in test 
+ 
