@@ -1,22 +1,16 @@
 'use strict';
 
-const service = require('feathers-mongoose');
-const campaign = require('./campaign-model');
+const campaign = require('./models/campaign.model');
+const controller = require('./controllers/campaigns.controller');
 const hooks = require('./hooks');
 
 module.exports = function() {
   const app = this;
 
-  const options = {
-    Model: campaign,
-    paginate: {
-      default: 5,
-      max: 25
-    }
-  };
+  const options = {};
 
   // Initialize our service with any options it requires
-  app.use('/api/v1/campaigns', service(options));
+  app.use('/api/v1/campaigns', new controller(options));
 
   // Get our initialize service to that we can bind hooks
   const campaignService = app.service('/api/v1/campaigns');

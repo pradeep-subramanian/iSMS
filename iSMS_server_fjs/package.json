@@ -33,6 +33,8 @@
     "feathers-mongoose": "^3.5.1",
     "feathers-rest": "^1.4.4",
     "feathers-socketio": "^1.4.1",
+    "feathers-query-filters": "^2.0.0",
+    "lodash.omit": "^4.3.0",
     "mongoose": "^4.5.9",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
@@ -40,7 +42,10 @@
     "passport-google-oauth20": "^1.0.0",
     "passport-google-token": "^0.1.2",
     "serve-favicon": "^2.3.0",
-    "winston": "^2.2.0"
+    "winston": "^2.2.0",
+    "generate-password": "^1.1.1",
+    "owasp-password-strength-test": "^1.3.0",
+    "validator": "^3.41.2"
   },
   "devDependencies": {
     "jshint": "^2.9.3",

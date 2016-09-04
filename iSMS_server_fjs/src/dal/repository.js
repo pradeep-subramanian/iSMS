@@ -1,4 +1,9 @@
-var mongoose = require('mongoose');
+const omit = require('lodash.omit');
+const PROPERTIES = ['$sort', '$limit', '$skip', '$select', '$populate'];
+const errors = require('feathers-errors');
+
+var mongoose = require('mongoose'),
+    _ = require('lodash');
 
 var repository = function (modelName) {
 
@@ -6,13 +11,44 @@ var repository = function (modelName) {
 
     self.Model = mongoose.model(modelName);
 
-    self.findById = function (id, cb, subDocuments) {
-        self.findOne({
+    self.findById = function (id, subDocuments) {
+        return self.findOne({
             _id: id
-        }, cb, subDocuments);
+        }, subDocuments);
     };
 
-    self.findOne =  function(params, cb, subDocuments) {
+    self.findOne =  function(params, subDocuments) {
+        return self._findOne(params, subDocuments, true);
+    };
+
+    self.findAll = function (query, filters, subDocuments) {
+        const result = self._find(query, filters, subDocuments, true);
+
+        if (!filters.$limit) {
+            return result.then(page => page.data);
+        }
+
+        return result;
+    };
+
+    self.create = function (obj) {
+        return self.Model.create(obj);
+    };
+
+    self.update = function (id, entity) {
+        return self._findOne({ _id: id }).then(oldEntity => {
+            oldEntity = _.extend(oldEntity, entity);
+            return oldEntity.save();
+        });
+    };
+
+    self.remove = function (id) {
+        return self._findOne({ _id: id }).then(oldEntity => {
+            return oldEntity.remove();
+        });
+    };
+
+    self._findOne = function(params, subDocuments, lean) {
         var query = self.Model.findOne(params);
 
         if (subDocuments)
@@ -22,59 +58,68 @@ var repository = function (modelName) {
             });
         }
 
-        query.exec(function(err, entity) {
-            if (!err && !entity){
-                err = true;
+        return query.lean(lean).exec().then(data => {
+            if (!data) {
+                throw new errors.NotFound('No record found');
             }
 
-            cb(err, entity);
-        });        
+            return data;
+        });
     };
 
-    self.findAll = function (params, cb, subDocuments, lean) {
-        var query = self.Model.find(params);
+    self._find = function(query, filters, subDocuments, lean) {
+        const q = self.Model.find(query).lean(lean);
 
-        if (lean) {
-            query = self.Model.find(params).lean()
+        if (filters.$select && filters.$select.length) {
+            var fields = {};
+
+            for (var key of filters.$select) {
+                fields[key] = 1;
+            }
+
+            q.select(fields);
+        }
+
+        if (filters.$limit) {
+            q.limit(filters.$limit);
+        }
+
+        if (filters.$skip) {
+            q.skip(filters.$skip);
         }
 
         if (subDocuments) {
             subDocuments.forEach(function(item) {
-                query.populate(item);
+                q.populate(item);
             });
         }
 
-        query.exec(cb);
-    };
+        if (filters.$populate){
+            q.populate(filters.$populate);
+        }
 
-    self.save = function (obj, cb) {
-        var entity = new self.Model(obj);
-        entity.save(function(err){
-            cb(err);
-        });
-    };
+        const executeQuery = total => {
+            return q.exec().then(data => {
+                return {
+                    total,
+                    limit: filters.$limit,
+                    skip: filters.$skip || 0,
+                    data
+                    };
+                });
+        };
 
-    self.update = function (entity, cb) {
-        self.findById(entity.id, function (err, oldEntity) {
-            if (err) {
-                cb(err);
-            } else{
-                oldEntity = entity;
-                oldEntity.save(cb);
-            }
-        });
-    };
-
-    self.delete = function (entity, cb) {
-        entity.remove(function (err) {
-            cb(err);
-        });
+        if(filters.$limit) {
+            return self.Model.where(query).count().exec().then(executeQuery);
+        }
+        
+        return executeQuery();
     };
 };
 
 repository.getModel = function (modelName) {
     return mongoose.model(modelName);
-}
+};
 
 module.exports.Repository = repository;
 

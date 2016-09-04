@@ -7,7 +7,9 @@
     "token": {
       "secret": "W4oj4u1UG9vD43oiAM3xy2AgMNJ1tR5yOcQ4vNlcBacynaCc2kA07oDxy1DuJoxqbqa74JgxWAuBsvucZ5qnwQ=="
     },
-    "local": {},
+    "local": {
+      "usernameField": "username"
+    },
     "facebook": {
       "clientID": "1138360949568452",
       "clientSecret": "d91d1499b04395e81e46ffe05b7bf4a2",
