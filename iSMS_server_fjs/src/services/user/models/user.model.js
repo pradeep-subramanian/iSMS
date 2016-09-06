@@ -5,11 +5,13 @@
  */
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
-  crypto = require('crypto'),
+  bcryptjs = require('bcryptjs'),
+  bcryptjs2 = _interopRequireDefault(bcryptjs),
   validator = require('validator'),
   generatePassword = require('generate-password'),
   owasp = require('owasp-password-strength-test');
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 /**
  * A Validation function for local strategy properties
  */
@@ -105,8 +107,9 @@ var UserSchema = new Schema({
  */
 UserSchema.pre('save', function (next) {
   if (this.password && this.isModified('password')) {
-    this.salt = crypto.randomBytes(16).toString('base64');
-    this.password = this.hashPassword(this.password);
+    var crypto = bcryptjs2.default;
+    this.salt = crypto.genSaltSync(10);
+    this.password = crypto.hashSync(this.password, this.salt);
   }
 
   next();
@@ -132,7 +135,8 @@ UserSchema.pre('validate', function (next) {
  */
 UserSchema.methods.hashPassword = function (password) {
   if (this.salt && password) {
-    return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64).toString('base64');
+    var crypto = bcryptjs2.default;
+    return crypto.hashSync(this.password, salt);
   } else {
     return password;
   }
